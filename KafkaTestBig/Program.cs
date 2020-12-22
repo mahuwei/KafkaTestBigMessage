@@ -12,9 +12,9 @@ namespace KafkaTestBig {
       Console.WriteLine("输入\n\t数字: 按数字发送相应的字节数消息；\n\tquit: 退出");
       var cts = new CancellationTokenSource();
 
-      Task.Run(() => {
+      _ = Task.Run(() => {
         ConsumeKafka(cts.Token);
-      });
+      }, cts.Token);
 
       //await SendToKafka(100, Topic, cts.Token);
 
@@ -54,7 +54,7 @@ namespace KafkaTestBig {
       }
     }
 
-    public static void ConsumeKafka(CancellationToken cancellationToken) {
+    public static Task ConsumeKafka(CancellationToken cancellationToken) {
       var conf = new ConsumerConfig {
         GroupId = "test-consumer2",
         BootstrapServers = Kafka,
@@ -96,6 +96,7 @@ namespace KafkaTestBig {
       }
 
       consumer.Close();
+      return Task.CompletedTask;
     }
   }
 }
